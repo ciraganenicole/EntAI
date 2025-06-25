@@ -12,7 +12,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-[16px] md:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 md:mb-4">
-              EntrepreneurAI
+              TijaBoost
             </h3>
             <p className="text-[12px] md:text-[16px] text-slate-300 mb-2 md:mb-6 max-w-md">
               {t('footer.description')}
@@ -42,7 +42,7 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center">
                 <Mail className="h-3 w-3 md:h-5 md:w-5 text-blue-400 mr-3" />
-                <span className="text-slate-300 text-[12px] md:text-[16px]">hello@entrepreneurai.com</span>
+                <span className="text-slate-300 text-[12px] md:text-[16px]">hello@tijaboost.com</span>
               </div>
               <div className="flex items-center">
                 <Phone className="h-3 w-3 md:h-5 md:w-5 text-blue-400 mr-3" />

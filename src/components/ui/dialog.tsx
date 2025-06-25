@@ -33,7 +33,7 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <div className="fixed left-[50%] top-[50%] z-50 grid w-[90%] md:w-[60%] translate-x-[-50%] translate-y-[-50%] p-1 sm:rounded-lg bg-gradient-to-br from-blue-500 via-blue-300 to-orange-400">
+    <div className="fixed left-[50%] top-[50%] z-50 grid w-[90%] md:w-[50%] translate-x-[-50%] translate-y-[-50%] p-1 sm:rounded-lg bg-gradient-to-br from-blue-500 via-blue-300 to-orange-400">
       <DialogPrimitive.Content
         ref={ref}
         className={cn(

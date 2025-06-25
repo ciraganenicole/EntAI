@@ -21,6 +21,7 @@ const steps = [
   "challenges",
   "interest",
   "features",
+  "channelsFrequency",
   "conclusion",
 ];
 
@@ -79,22 +80,6 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
     onClose();
   };
 
-  // Copy link handler
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: t('survey.copyLinkSuccess') || 'Link copied!',
-        description: t('survey.copyLinkDesc') || 'You can now share this survey with others.',
-      });
-    } catch {
-      toast({
-        title: t('survey.copyLinkError') || 'Failed to copy',
-        description: t('survey.copyLinkErrorDesc') || 'Please try again.',
-      });
-    }
-  };
-
   // Options
   const statutOptions = [
     { value: "etudiant", label: t('survey.statut.etudiant') },
@@ -137,7 +122,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
   const canalOptions = [
     { value: "mobile", label: t('survey.canal.mobile') },
     { value: "web", label: t('survey.canal.web') },
-    { value: "messagerie", label: t('survey.canal.messagerie') },
+    // { value: "messagerie", label: t('survey.canal.messagerie') },
     { value: "autre", label: t('survey.canal.autre') },
   ];
   const frequenceOptions = [
@@ -148,7 +133,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
   ];
 
   return (
-    <div className="">
+    <div className="p-4">
       {/* Step Indicator */}
       <div className="flex justify-center mb-6">
         {steps.map((step, idx) => (
@@ -162,12 +147,12 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           />
         ))}
       </div>
-      <CardHeader className="flex flex-row items-center justify-between px-0 pt-0 pb-4 w-full">
+      <CardHeader className="flex flex-row items-center justify-between px-0 pt-0 pb-4 w-full mb-8">
         <div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-orange-400 bg-clip-text text-transparent mb-2">
+          <CardTitle className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-orange-400 bg-clip-text text-transparent mb-2">
             {t('survey.title')}
           </CardTitle>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-[14px] md:text-lg">
             {t('survey.subtitle')}
           </p>
         </div>
@@ -177,7 +162,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 1: Profile */}
           {currentStep === 0 && (
             <div>
-              <Label className="font-semibold text-lg block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
                 {t('survey.statut.label')}
               </Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -188,7 +173,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                       checked={formData.statut === opt.value}
                       onCheckedChange={() => handleInputChange('statut', opt.value)}
                     />
-                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    <Label htmlFor={opt.value} className="text-[12px] md:text-base">{opt.label}</Label>
                     {opt.value === 'autre' && formData.statut === 'autre' && (
                       <Input
                         className="ml-2"
@@ -205,7 +190,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 2: Project Duration */}
           {currentStep === 1 && (
             <div>
-              <Label className="font-semibold text-lg block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
                 {t('survey.projetDuree.label')}
               </Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -216,7 +201,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                       checked={formData.projetDuree === opt.value}
                       onCheckedChange={() => handleInputChange('projetDuree', opt.value)}
                     />
-                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    <Label htmlFor={opt.value} className="text-[12px] md:text-base">{opt.label}</Label>
                   </div>
                 ))}
               </div>
@@ -225,7 +210,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 3: Challenges */}
           {currentStep === 2 && (
             <div>
-              <Label className="font-semibold text-lg block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
                 {t('survey.defis.label')}
               </Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -236,7 +221,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                       checked={formData.defis.includes(opt.value)}
                       onCheckedChange={() => handleMultiToggle('defis', opt.value)}
                     />
-                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    <Label htmlFor={opt.value} className="text-[12px] md:text-base">{opt.label}</Label>
                     {opt.value === 'autre' && formData.defis.includes('autre') && (
                       <Input
                         className="ml-2"
@@ -253,7 +238,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 4: Interest */}
           {currentStep === 3 && (
             <div>
-              <Label className="font-semibold text-lg block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
                 {t('survey.interetOutil.label')}
               </Label>
               <div className="flex flex-col md:flex-row gap-4 mt-2">
@@ -264,7 +249,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                       checked={formData.interetOutil === opt.value}
                       onCheckedChange={() => handleInputChange('interetOutil', opt.value)}
                     />
-                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    <Label htmlFor={opt.value} className="text-[12px] md:text-base">{opt.label}</Label>
                   </div>
                 ))}
               </div>
@@ -273,7 +258,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 5: Features */}
           {currentStep === 4 && (
             <div>
-              <Label className="font-semibold text-lg block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
                 {t('survey.fonctionnalites.label')}
               </Label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -284,7 +269,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                       checked={formData.fonctionnalites.includes(opt.value)}
                       onCheckedChange={() => handleMultiToggle('fonctionnalites', opt.value)}
                     />
-                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    <Label htmlFor={opt.value} className="text-[12px] md:text-base">{opt.label}</Label>
                     {opt.value === 'autre' && formData.fonctionnalites.includes('autre') && (
                       <Input
                         className="ml-2"
@@ -298,8 +283,56 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
               </div>
             </div>
           )}
-          {/* Step 6: Conclusion */}
+          {/* Step 6: Channels and Frequency */}
           {currentStep === 5 && (
+            <div>
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+                {t('survey.canal.label')}
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-6">
+                {canalOptions.map(opt => (
+                  <div key={opt.value} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={opt.value}
+                      checked={formData.canal.includes(opt.value)}
+                      onCheckedChange={() => handleMultiToggle('canal', opt.value)}
+                    />
+                    <Label htmlFor={opt.value} className="text-[12px] md:text-base">{opt.label}</Label>
+                    {opt.value === 'autre' && formData.canal.includes('autre') && (
+                      <Input
+                        className="ml-2"
+                        placeholder={t('survey.canal.autrePlaceholder')}
+                        value={formData.canalOther}
+                        onChange={e => handleInputChange('canalOther', e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+                {t('survey.frequence.label')}
+              </Label>
+              <div className="mt-2">
+                <Select
+                  value={formData.frequence}
+                  onValueChange={value => handleInputChange('frequence', value)}
+                >
+                  <SelectTrigger className="w-full md:w-1/2">
+                    <SelectValue placeholder={t('survey.frequence.placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {frequenceOptions.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          {/* Step 7: Conclusion */}
+          {currentStep === 6 && (
             <div>
               <Label className="font-semibold text-lg block mb-4">
                 {t('survey.infoSuite.label')}
@@ -310,11 +343,11 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                   checked={formData.infoSuite}
                   onCheckedChange={checked => handleInputChange('infoSuite', checked as boolean)}
                 />
-                <Label htmlFor="infoSuite" className="text-base">{t('survey.infoSuite.oui')}</Label>
+                <Label htmlFor="infoSuite" className="text-[12px] md:text-base">{t('survey.infoSuite.oui')}</Label>
                 {formData.infoSuite && (
                   <Input
                     className="ml-2"
-                    placeholder={t('survey.infoSuite.placeholder')}
+                    placeholder={t('survey.infoSuite.emailPlaceholder')}
                     value={formData.email}
                     onChange={e => handleInputChange('email', e.target.value)}
                   />
@@ -324,13 +357,13 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                   checked={!formData.infoSuite}
                   onCheckedChange={() => handleInputChange('infoSuite', false)}
                 />
-                <Label htmlFor="infoSuiteNon" className="text-base">{t('survey.infoSuite.non')}</Label>
+                <Label htmlFor="infoSuiteNon" className="text-[12px] md:text-base">{t('survey.infoSuite.non')}</Label>
               </div>
             </div>
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex flex-col md:flex-row justify-end items-center gap-4 pt-8">
+          <div className="flex flex-row justify-center items-center gap-4 pt-8">
             <Button
               type="button"
               variant="outline"
@@ -338,7 +371,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
               disabled={currentStep === 0}
               className="rounded-full min-w-[120px] h-12 border border-blue-200 shadow-sm text-blue-700 font-semibold hover:bg-blue-50 transition"
             >
-              {t('survey.back') || 'Back'}
+              {t('survey.back')}
             </Button>
             {currentStep < steps.length - 1 ? (
               <Button
@@ -346,7 +379,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                 onClick={goNext}
                 className="rounded-full min-w-[120px] h-12 bg-gradient-to-r from-blue-600 to-orange-400 hover:from-blue-700 hover:to-orange-500 text-white shadow-lg font-semibold transition"
               >
-                {t('survey.next') || 'Next'}
+                {t('survey.next')}
               </Button>
             ) : (
               <Button
@@ -357,12 +390,12 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('survey.submitting') || 'Submitting...'}
+                    {t('survey.submitting')}
                   </>
                 ) : (
                   <>
                     <Send className="mr-2 h-4 w-4" />
-                    {t('survey.submit') || 'Submit'}
+                    {t('survey.submit')}
                   </>
                 )}
               </Button>
