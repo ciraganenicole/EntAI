@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Partners = () => {
@@ -42,7 +41,7 @@ const Partners = () => {
         </div>
 
         <div className="mt-8 md:mt-16 text-center">
-          <div className="inline-flex items-center justify-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl">
+          <div className="inline-flex items-center justify-center p-4 bg-gradient-to-r from-blue-200 to-orange-300 rounded-2xl">
             <p className="text-slate-700 font-medium">
               <span className="text-blue-600 font-bold">$100M+</span> {t('partners.funding')}
             </p>

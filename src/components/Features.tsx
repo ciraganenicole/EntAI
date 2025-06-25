@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Lightbulb, FileText, Users, DollarSign, BarChart3, MessageSquare } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -17,7 +16,7 @@ const Features = () => {
       icon: FileText,
       title: t('features.businessPlan.title'),
       description: t('features.businessPlan.description'),
-      gradient: "from-blue-400 to-purple-500"
+      gradient: "from-blue-400 to-orange-500"
     },
     {
       icon: Users,
@@ -41,7 +40,7 @@ const Features = () => {
       icon: MessageSquare,
       title: t('features.community.title'),
       description: t('features.community.description'),
-      gradient: "from-purple-400 to-pink-500"
+      gradient: "from-orange-400 to-pink-500"
     }
   ];
 

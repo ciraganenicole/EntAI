@@ -22,8 +22,8 @@ const Hero = () => {
         <div className="text-center max-w-4xl mx-auto animate-fade-in">
           <div className="flex items-center justify-center mb-3 md:mt-0 md:mb-6 mt-20">
             <Sparkles className="h-12 w-12 text-blue-400 mr-4" />
-            <h1 className="text-3xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-blue-600 bg-clip-text text-transparent">
-              {t('hero.title')}
+            <h1 className="text-3xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 via-orange-400 to-blue-600 bg-clip-text text-transparent">
+              TijaBoost
             </h1>
           </div>
           
@@ -38,7 +38,7 @@ const Hero = () => {
           <div className="flex flex-row gap-4 justify-center items-center">
             <Button 
               size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white w-[50%] md:w-[25%] py-2 px-3 mb:px-8 mb:py-4 text-[12px] md:text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-2xl"
+              className="bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-700 hover:to-orange-600 text-white w-[50%] md:w-[25%] py-2 px-3 mb:px-8 mb:py-4 text-[12px] md:text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 shadow-2xl"
             >
               {t('hero.startJourney')}
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -49,7 +49,7 @@ const Hero = () => {
                 <Button 
                   variant="outline" 
                   size="lg"
-                  className="border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-slate-900 w-[50%] md:w-[25%] py-2 px-3 mb:px-8 mb:py-4 text-[12px] md:text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105"
+                  className="border-2 border-blue-500 text-blue-500 hover:bg-blue-400 hover:text-slate-900 w-[50%] md:w-[25%] py-2 px-3 mb:px-8 mb:py-4 text-[12px] md:text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105"
                 >
                   {t('hero.takeSurvey')}
                 </Button>

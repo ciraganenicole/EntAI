@@ -3,29 +3,64 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Copy } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { toast } from "@/hooks/use-toast";
 
 interface SurveyFormProps {
   onClose: () => void;
 }
 
+const steps = [
+  "profile",
+  "projectDuration",
+  "challenges",
+  "interest",
+  "features",
+  "conclusion",
+];
+
 const SurveyForm = ({ onClose }: SurveyFormProps) => {
   const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    // 1. Profil de l'utilisateur
+    statut: "",
+    statutOther: "",
+    projetDuree: "",
+    // 2. Problèmes rencontrés
+    defis: [] as string[],
+    defisOther: "",
+    // 3. Intérêt pour la plateforme
+    interetOutil: "",
+    fonctionnalites: [] as string[],
+    fonctionnalitesOther: "",
+    // 4. Canaux et fréquence
+    canal: [] as string[],
+    canalOther: "",
+    frequence: "",
+    // 5. Conclusion
+    infoSuite: false,
     email: "",
-    company: "",
-    role: "",
-    experience: "",
-    challenges: "",
-    interests: [] as string[],
-    feedback: "",
-    newsletter: false
   });
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const goNext = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
+  const goBack = () => setCurrentStep((s) => Math.max(s - 1, 0));
+
+  // Helper for multiple choice
+  const handleMultiToggle = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: prev[field].includes(value)
+        ? prev[field].filter((v: string) => v !== value)
+        : [...prev[field], value]
+    }));
+  };
 
   const handleInputChange = (field: string, value: string | boolean | string[]) => {
     setFormData(prev => ({
@@ -34,202 +69,307 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
     }));
   };
 
-  const handleInterestToggle = (interest: string) => {
-    setFormData(prev => ({
-      ...prev,
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter(i => i !== interest)
-        : [...prev.interests, interest]
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Here you would typically send the data to your backend
     console.log("Survey data:", formData);
-    
     setIsSubmitting(false);
     onClose();
   };
 
-  const interestOptions = [
-    "AI Pitch Builder",
-    "Business Plan Generator", 
-    "Financial Management",
-    "Market Analytics",
-    "Personal Coaching",
-    "Community Support"
+  // Copy link handler
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: t('survey.copyLinkSuccess') || 'Link copied!',
+        description: t('survey.copyLinkDesc') || 'You can now share this survey with others.',
+      });
+    } catch {
+      toast({
+        title: t('survey.copyLinkError') || 'Failed to copy',
+        description: t('survey.copyLinkErrorDesc') || 'Please try again.',
+      });
+    }
+  };
+
+  // Options
+  const statutOptions = [
+    { value: "etudiant", label: t('survey.statut.etudiant') },
+    { value: "entrepreneur", label: t('survey.statut.entrepreneur') },
+    { value: "porteur", label: t('survey.statut.porteur') },
+    { value: "salarie", label: t('survey.statut.salarie') },
+    { value: "sansemploi", label: t('survey.statut.sansemploi') },
+    { value: "autre", label: t('survey.statut.autre') },
+  ];
+  const projetDureeOptions = [
+    { value: "moins6mois", label: t('survey.projetDuree.moins6mois') },
+    { value: "6mois1an", label: t('survey.projetDuree.6mois1an') },
+    { value: "1a3ans", label: t('survey.projetDuree.1a3ans') },
+    { value: "plus3ans", label: t('survey.projetDuree.plus3ans') },
+    { value: "pascommence", label: t('survey.projetDuree.pascommence') },
+  ];
+  const defisOptions = [
+    { value: "financements", label: t('survey.defis.financements') },
+    { value: "developperidee", label: t('survey.defis.developperidee') },
+    { value: "formations", label: t('survey.defis.formations') },
+    { value: "gestionentreprise", label: t('survey.defis.gestionentreprise') },
+    { value: "tempsmotivation", label: t('survey.defis.tempsmotivation') },
+    { value: "commercialiser", label: t('survey.defis.commercialiser') },
+    { value: "autre", label: t('survey.defis.autre') },
+  ];
+  const interetOutilOptions = [
+    { value: "oui", label: t('survey.interetOutil.oui') },
+    { value: "peutetre", label: t('survey.interetOutil.peutetre') },
+    { value: "non", label: t('survey.interetOutil.non') },
+  ];
+  const fonctionnalitesOptions = [
+    { value: "conseilsperso", label: t('survey.fonctionnalites.conseilsperso') },
+    { value: "businessplan", label: t('survey.fonctionnalites.businessplan') },
+    { value: "suiviprogress", label: t('survey.fonctionnalites.suiviprogress') },
+    { value: "ressources", label: t('survey.fonctionnalites.ressources') },
+    { value: "suggestions", label: t('survey.fonctionnalites.suggestions') },
+    { value: "chatbot", label: t('survey.fonctionnalites.chatbot') },
+    { value: "autre", label: t('survey.fonctionnalites.autre') },
+  ];
+  const canalOptions = [
+    { value: "mobile", label: t('survey.canal.mobile') },
+    { value: "web", label: t('survey.canal.web') },
+    { value: "messagerie", label: t('survey.canal.messagerie') },
+    { value: "autre", label: t('survey.canal.autre') },
+  ];
+  const frequenceOptions = [
+    { value: "quotidien", label: t('survey.frequence.quotidien') },
+    { value: "2a3sem", label: t('survey.frequence.2a3sem') },
+    { value: "1sem", label: t('survey.frequence.1sem') },
+    { value: "occasionnel", label: t('survey.frequence.occasionnel') },
   ];
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {t('survey.title')}
-        </h2>
-        <p className="text-gray-600">
-          {t('survey.subtitle')}
-        </p>
+    <div className="">
+      {/* Step Indicator */}
+      <div className="flex justify-center mb-6">
+        {steps.map((step, idx) => (
+          <div
+            key={step}
+            className={`h-2 w-8 mx-1 rounded-full transition-all duration-300 ${
+              idx === currentStep
+                ? "bg-gradient-to-r from-blue-600 to-orange-400 w-12"
+                : "bg-gray-300"
+            }`}
+          />
+        ))}
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Personal Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="name">{t('survey.name')}</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder={t('survey.namePlaceholder')}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="email">{t('survey.email')}</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder={t('survey.emailPlaceholder')}
-              required
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="company">{t('survey.company')}</Label>
-            <Input
-              id="company"
-              value={formData.company}
-              onChange={(e) => handleInputChange('company', e.target.value)}
-              placeholder={t('survey.companyPlaceholder')}
-            />
-          </div>
-          <div>
-            <Label htmlFor="role">{t('survey.role')}</Label>
-            <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder={t('survey.rolePlaceholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="entrepreneur">{t('survey.roles.entrepreneur')}</SelectItem>
-                <SelectItem value="investor">{t('survey.roles.investor')}</SelectItem>
-                <SelectItem value="coach">{t('survey.roles.coach')}</SelectItem>
-                <SelectItem value="student">{t('survey.roles.student')}</SelectItem>
-                <SelectItem value="other">{t('survey.roles.other')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Experience Level */}
+      <CardHeader className="flex flex-row items-center justify-between px-0 pt-0 pb-4 w-full">
         <div>
-          <Label htmlFor="experience">{t('survey.experience')}</Label>
-          <Select value={formData.experience} onValueChange={(value) => handleInputChange('experience', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder={t('survey.experiencePlaceholder')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="beginner">{t('survey.experienceLevels.beginner')}</SelectItem>
-              <SelectItem value="intermediate">{t('survey.experienceLevels.intermediate')}</SelectItem>
-              <SelectItem value="advanced">{t('survey.experienceLevels.advanced')}</SelectItem>
-              <SelectItem value="expert">{t('survey.experienceLevels.expert')}</SelectItem>
-            </SelectContent>
-          </Select>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-orange-400 bg-clip-text text-transparent mb-2">
+            {t('survey.title')}
+          </CardTitle>
+          <p className="text-gray-600 text-lg">
+            {t('survey.subtitle')}
+          </p>
         </div>
-
-        {/* Challenges */}
-        <div>
-          <Label htmlFor="challenges">{t('survey.challenges')}</Label>
-          <Textarea
-            id="challenges"
-            value={formData.challenges}
-            onChange={(e) => handleInputChange('challenges', e.target.value)}
-            placeholder={t('survey.challengesPlaceholder')}
-            rows={3}
-          />
-        </div>
-
-        {/* Interests */}
-        <div>
-          <Label>{t('survey.interests')}</Label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
-            {interestOptions.map((interest) => (
-              <div key={interest} className="flex items-center space-x-2">
-                <Checkbox
-                  id={interest}
-                  checked={formData.interests.includes(interest)}
-                  onCheckedChange={() => handleInterestToggle(interest)}
-                />
-                <Label htmlFor={interest} className="text-sm font-normal">
-                  {t(`survey.interests.${interest.toLowerCase().replace(/\s+/g, '')}`)}
-                </Label>
+      </CardHeader>
+      <CardContent className="px-0 pb-0 w-full bg-transparent">
+        <form onSubmit={handleSubmit} className="space-y-8 w-full">
+          {/* Step 1: Profile */}
+          {currentStep === 0 && (
+            <div>
+              <Label className="font-semibold text-lg block mb-4">
+                {t('survey.statut.label')}
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {statutOptions.map(opt => (
+                  <div key={opt.value} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={opt.value}
+                      checked={formData.statut === opt.value}
+                      onCheckedChange={() => handleInputChange('statut', opt.value)}
+                    />
+                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    {opt.value === 'autre' && formData.statut === 'autre' && (
+                      <Input
+                        className="ml-2"
+                        placeholder={t('survey.statut.autrePlaceholder')}
+                        value={formData.statutOther}
+                        onChange={e => handleInputChange('statutOther', e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
+          {/* Step 2: Project Duration */}
+          {currentStep === 1 && (
+            <div>
+              <Label className="font-semibold text-lg block mb-4">
+                {t('survey.projetDuree.label')}
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {projetDureeOptions.map(opt => (
+                  <div key={opt.value} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={opt.value}
+                      checked={formData.projetDuree === opt.value}
+                      onCheckedChange={() => handleInputChange('projetDuree', opt.value)}
+                    />
+                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Step 3: Challenges */}
+          {currentStep === 2 && (
+            <div>
+              <Label className="font-semibold text-lg block mb-4">
+                {t('survey.defis.label')}
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {defisOptions.map(opt => (
+                  <div key={opt.value} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={opt.value}
+                      checked={formData.defis.includes(opt.value)}
+                      onCheckedChange={() => handleMultiToggle('defis', opt.value)}
+                    />
+                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    {opt.value === 'autre' && formData.defis.includes('autre') && (
+                      <Input
+                        className="ml-2"
+                        placeholder={t('survey.defis.autrePlaceholder')}
+                        value={formData.defisOther}
+                        onChange={e => handleInputChange('defisOther', e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Step 4: Interest */}
+          {currentStep === 3 && (
+            <div>
+              <Label className="font-semibold text-lg block mb-4">
+                {t('survey.interetOutil.label')}
+              </Label>
+              <div className="flex flex-col md:flex-row gap-4 mt-2">
+                {interetOutilOptions.map(opt => (
+                  <div key={opt.value} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={opt.value}
+                      checked={formData.interetOutil === opt.value}
+                      onCheckedChange={() => handleInputChange('interetOutil', opt.value)}
+                    />
+                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Step 5: Features */}
+          {currentStep === 4 && (
+            <div>
+              <Label className="font-semibold text-lg block mb-4">
+                {t('survey.fonctionnalites.label')}
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {fonctionnalitesOptions.map(opt => (
+                  <div key={opt.value} className="flex items-center space-x-3">
+                    <Checkbox
+                      id={opt.value}
+                      checked={formData.fonctionnalites.includes(opt.value)}
+                      onCheckedChange={() => handleMultiToggle('fonctionnalites', opt.value)}
+                    />
+                    <Label htmlFor={opt.value} className="text-base">{opt.label}</Label>
+                    {opt.value === 'autre' && formData.fonctionnalites.includes('autre') && (
+                      <Input
+                        className="ml-2"
+                        placeholder={t('survey.fonctionnalites.autrePlaceholder')}
+                        value={formData.fonctionnalitesOther}
+                        onChange={e => handleInputChange('fonctionnalitesOther', e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Step 6: Conclusion */}
+          {currentStep === 5 && (
+            <div>
+              <Label className="font-semibold text-lg block mb-4">
+                {t('survey.infoSuite.label')}
+              </Label>
+              <div className="flex items-center space-x-3 mt-2">
+                <Checkbox
+                  id="infoSuite"
+                  checked={formData.infoSuite}
+                  onCheckedChange={checked => handleInputChange('infoSuite', checked as boolean)}
+                />
+                <Label htmlFor="infoSuite" className="text-base">{t('survey.infoSuite.oui')}</Label>
+                {formData.infoSuite && (
+                  <Input
+                    className="ml-2"
+                    placeholder={t('survey.infoSuite.placeholder')}
+                    value={formData.email}
+                    onChange={e => handleInputChange('email', e.target.value)}
+                  />
+                )}
+                <Checkbox
+                  id="infoSuiteNon"
+                  checked={!formData.infoSuite}
+                  onCheckedChange={() => handleInputChange('infoSuite', false)}
+                />
+                <Label htmlFor="infoSuiteNon" className="text-base">{t('survey.infoSuite.non')}</Label>
+              </div>
+            </div>
+          )}
 
-        {/* Additional Feedback */}
-        <div>
-          <Label htmlFor="feedback">{t('survey.feedback')}</Label>
-          <Textarea
-            id="feedback"
-            value={formData.feedback}
-            onChange={(e) => handleInputChange('feedback', e.target.value)}
-            placeholder={t('survey.feedbackPlaceholder')}
-            rows={4}
-          />
-        </div>
-
-        {/* Newsletter Subscription */}
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="newsletter"
-            checked={formData.newsletter}
-            onCheckedChange={(checked) => handleInputChange('newsletter', checked as boolean)}
-          />
-          <Label htmlFor="newsletter" className="text-sm font-normal">
-            {t('survey.newsletter')}
-          </Label>
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-end space-x-3 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
-            {t('survey.cancel')}
-          </Button>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('survey.submitting')}
-              </>
+          {/* Navigation Buttons */}
+          <div className="flex flex-col md:flex-row justify-end items-center gap-4 pt-8">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={goBack}
+              disabled={currentStep === 0}
+              className="rounded-full min-w-[120px] h-12 border border-blue-200 shadow-sm text-blue-700 font-semibold hover:bg-blue-50 transition"
+            >
+              {t('survey.back') || 'Back'}
+            </Button>
+            {currentStep < steps.length - 1 ? (
+              <Button
+                type="button"
+                onClick={goNext}
+                className="rounded-full min-w-[120px] h-12 bg-gradient-to-r from-blue-600 to-orange-400 hover:from-blue-700 hover:to-orange-500 text-white shadow-lg font-semibold transition"
+              >
+                {t('survey.next') || 'Next'}
+              </Button>
             ) : (
-              <>
-                <Send className="mr-2 h-4 w-4" />
-                {t('survey.submit')}
-              </>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-full min-w-[120px] h-12 bg-gradient-to-r from-blue-600 to-orange-400 hover:from-blue-700 hover:to-orange-500 text-white shadow-lg font-semibold transition"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t('survey.submitting') || 'Submitting...'}
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-4 w-4" />
+                    {t('survey.submit') || 'Submit'}
+                  </>
+                )}
+              </Button>
             )}
-          </Button>
-        </div>
-      </form>
+          </div>
+        </form>
+      </CardContent>
     </div>
   );
 };
