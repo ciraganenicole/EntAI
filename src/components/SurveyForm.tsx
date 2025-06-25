@@ -147,7 +147,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           />
         ))}
       </div>
-      <CardHeader className="flex flex-row items-center justify-between px-0 pt-0 pb-4 w-full mb-8">
+      <CardHeader className="flex flex-row items-center justify-between px-0 pt-0 pb-4 w-full mb-2 md:mb-4 md:mb-8">
         <div>
           <CardTitle className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-orange-400 bg-clip-text text-transparent mb-2">
             {t('survey.title')}
@@ -158,14 +158,14 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
         </div>
       </CardHeader>
       <CardContent className="px-0 pb-0 w-full bg-transparent">
-        <form onSubmit={handleSubmit} className="space-y-8 w-full">
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-8 w-full">
           {/* Step 1: Profile */}
           {currentStep === 0 && (
             <div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.statut.label')}
               </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mt-2">
                 {statutOptions.map(opt => (
                   <div key={opt.value} className="flex items-center space-x-3">
                     <Checkbox
@@ -190,10 +190,10 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 2: Project Duration */}
           {currentStep === 1 && (
             <div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.projetDuree.label')}
               </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mt-2">
                 {projetDureeOptions.map(opt => (
                   <div key={opt.value} className="flex items-center space-x-3">
                     <Checkbox
@@ -210,10 +210,10 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 3: Challenges */}
           {currentStep === 2 && (
             <div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.defis.label')}
               </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mt-2">
                 {defisOptions.map(opt => (
                   <div key={opt.value} className="flex items-center space-x-3">
                     <Checkbox
@@ -238,10 +238,10 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 4: Interest */}
           {currentStep === 3 && (
             <div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.interetOutil.label')}
               </Label>
-              <div className="flex flex-col md:flex-row gap-4 mt-2">
+              <div className="flex flex-col md:flex-row gap-2 md:gap-4 mt-2">
                 {interetOutilOptions.map(opt => (
                   <div key={opt.value} className="flex items-center space-x-3">
                     <Checkbox
@@ -258,10 +258,10 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 5: Features */}
           {currentStep === 4 && (
             <div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.fonctionnalites.label')}
               </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mt-2">
                 {fonctionnalitesOptions.map(opt => (
                   <div key={opt.value} className="flex items-center space-x-3">
                     <Checkbox
@@ -286,10 +286,10 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 6: Channels and Frequency */}
           {currentStep === 5 && (
             <div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.canal.label')}
               </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mt-2 mb-6">
                 {canalOptions.map(opt => (
                   <div key={opt.value} className="flex items-center space-x-3">
                     <Checkbox
@@ -309,7 +309,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
                   </div>
                 ))}
               </div>
-              <Label className="font-semibold text-[16px] md:text-[20px] block mb-4">
+              <Label className="font-semibold text-[16px] md:text-[20px] block mb-2 md:mb-4">
                 {t('survey.frequence.label')}
               </Label>
               <div className="mt-2">
@@ -334,7 +334,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           {/* Step 7: Conclusion */}
           {currentStep === 6 && (
             <div>
-              <Label className="font-semibold text-lg block mb-4">
+              <Label className="font-semibold text-lg block mb-2 md:mb-4">
                 {t('survey.infoSuite.label')}
               </Label>
               <div className="flex items-center space-x-3 mt-2">
@@ -363,7 +363,7 @@ const SurveyForm = ({ onClose }: SurveyFormProps) => {
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex flex-row justify-center items-center gap-4 pt-8">
+          <div className="flex flex-row justify-center items-center gap-2 md:gap-4 pt-4 md:pt-8">
             <Button
               type="button"
               variant="outline"
